@@ -36,7 +36,7 @@
             <td>{{ item._id }}</td>
             <td>{{ item.name }}</td>
             <td>
-              <v-btn @click="showTeamDetail(item)" color="primary">Modifier</v-btn>
+              <v-btn @click="showTeamDetail(item._id)" color="primary">Modifier</v-btn>
               <v-btn @click="deleteTeamMaybe(item._id)" color="red">Supprimer</v-btn>
             </td>
           </tr>
@@ -74,7 +74,14 @@
         @closeDialog="rmTeam"
     />
 
-    <DetailTeam :team="selectedTeam" :show="showDetailTeam" @closeDetailTeam="closeDetailTeam"/>
+    <DetailTeam
+        :team="selectedTeam"
+        :show="showDetailTeam"
+        :members="members"
+        @closeDetailTeam="closeDetailTeam"
+        @updateTeam="showTeamDetail"
+        class="mt-5"
+    />
 
   </v-container>
 </template>
@@ -83,6 +90,7 @@
 import {mapActions, mapState} from "vuex";
 import EventDialog from "@/components/EventDialog.vue";
 import DetailTeam from "@/components/DetailTeam.vue";
+
 export default {
   data() {
     return {
@@ -100,6 +108,7 @@ export default {
       idTeamDelTmp: null,
 
       showDetailTeam: false,
+      members: null,
     };
   },
   components: {
@@ -107,14 +116,18 @@ export default {
     DetailTeam,
   },
   computed: {
-    ...mapState('orgaStore', ['currentOrganisation']),
+    ...mapState('orgaStore', ['currentOrganisation', 'mdpOrganisation']),
     ...mapState('teamStore', ['listTeams']),
   },
   methods: {
     ...mapActions('teamStore', ['getListTeamsFromAPi']),
     ...mapActions('orgaStore', ['addTeamsInOrga', 'removeTeamInOrga', 'getOrgaByIdApi']),
+    ...mapActions('herosStore', ['getHeroByIdFromApi']),
     showDialogAddTeams() {
-      this.teamsPotentiel = this.listTeams.filter(team => team.nbAffiliations === 0);
+      let teamsCurrentOrga = this.currentOrganisation.teams;
+      this.teamsPotentiel = this.listTeams.filter(team => {
+        return !teamsCurrentOrga.some(teamOrga => teamOrga._id === team._id)
+      })
       this.dialog = true;
     },
     cancel() {
@@ -125,8 +138,8 @@ export default {
       await this.addTeamsInOrga({idTeam: this.selectedTeam})
       this.dialog = false;
       this.selectedTeam = null;
-      this.getOrgaByIdApi(this.currentOrganisation._id)
-      this.getListTeamsFromAPi();
+      await this.getOrgaByIdApi(this.currentOrganisation._id)
+      await this.getListTeamsFromAPi();
     },
     async deleteTeamMaybe(idTeam) {
       this.idTeamDelTmp = idTeam;
@@ -135,25 +148,32 @@ export default {
     async rmTeam(event){
       if(event){
         const body = {idTeam: this.idTeamDelTmp}
-        console.log(body)
         await this.removeTeamInOrga(body)
-        this.getOrgaByIdApi(this.currentOrganisation._id)
-        this.getListTeamsFromAPi();
+        await this.getOrgaByIdApi(this.currentOrganisation._id)
+        await this.getListTeamsFromAPi();
       }
       this.showDialogDelTeam = false;
       this.idTeamDelTmp = null;
     },
-    async showTeamDetail(team) {
-      this.selectedTeam = team;
+    async showTeamDetail(teamId) {
+      this.selectedTeam = this.currentOrganisation.teams.find(teamOrga => teamOrga._id === teamId);
+      await this.loadMembersOfTeam();
       this.showDetailTeam = true;
     },
     async closeDetailTeam() {
       this.showDetailTeam = false;
-    }
+    },
+    async loadMembersOfTeam() {
+      let membersTmp = [];
+      for(let i = 0; i < this.selectedTeam.members.length; i++) {
+        let tmp = await this.getHeroByIdFromApi({_id:this.selectedTeam.members[i], org_secret: this.mdpOrganisation})
+        membersTmp.push(tmp[0])
+      }
+      this.members = membersTmp;
+    },
   },
   mounted() {
     this.getListTeamsFromAPi();
-    console.log(this.currentOrganisation, 'orga')
   }
 };
 </script>

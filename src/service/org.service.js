@@ -18,6 +18,7 @@ async function deleteTeamInOrg(body){
 
 async function getOrgById(body){
     return await getRequest('/orgs/getbyid/'+body.body._id+'?org-secret='+body.org_secret, 'GETORGBYID')
+    //return await getRequest('/orgs/getbyid/'+body.body._id, 'GETORGBYID')
 }
 
 export {

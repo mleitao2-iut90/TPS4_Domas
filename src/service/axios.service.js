@@ -1,30 +1,25 @@
 import axios from 'axios'
-
-/* Explications :
-
-Un agent axios permet de faire des requête asynchrones à un serveur.
-
-Si l'appel réussi, l'agent axios renvoie un objet représentant la réponse (NB: dans les fonction ci-dessous, on
-met cet objet dans une variable nommée response). Cet objet contient un champ data, qui contient les données renvoyées
-par l'API. Comme l'API renvoie toujours des données au format : {error: err_number, stats: http_status, data: ... }
-on a donc :
-   - response.data.error : permet de savoir s'il y a une erreur dans la requête
-   - response.data.data : contient soit un message d'erreur, soit les données demandées.
-
-En revanche, si l'appel à axios échoue, cela provoque la levée d'une exception avec un objet la
-représentant (NB : variable nommée err dans le catch). Il y a 3 cas d'erreurs :
-   - le serveur http renvoie un status != 2XX (par ex 404, 500). C'est par exemple le cas en cas de route invalide,
-   quand les données demandées n'existent pas, ...
-   - le serveur ne répond pas, malgré le fait que la requête soit partie,
-   - impossible d'envoyer la requête
-Ces trois cas sont traités par une unique fonction handleError().
-
- */
-
+import './axios-interceptors'
+import store from "@/store";
 
 // creation d'un agent axios, avec une config. pour atteindre l'API
 const axiosAgent = axios.create({
     baseURL: "https://apidemo.iut-bm.univ-fcomte.fr/herocorp"
+});
+
+axios.interceptors.request.use(function (config) {
+    const secretPhrase = store.state["orgaStore/mdpOrganisation"]; // Obtenez la phrase secrète du store Vuex
+    console.log(secretPhrase)
+    // Vérifiez si la phrase secrète existe dans le store
+    if (secretPhrase) {
+        // Ajoutez l'en-tête org-secret à la requête
+        config.headers['org-secret'] = secretPhrase;
+    }
+
+    return config;
+}, function (error) {
+    // Faites quelque chose avec une erreur de requête
+    return Promise.reject(error);
 });
 
 function handleError(serviceName, err) {

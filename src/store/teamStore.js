@@ -1,4 +1,4 @@
-import {createTeam, getAllTeam} from "@/service/team.service";
+import {addHeroeInTeam, createTeam, deleteHeroesInTeam, getAllTeam} from "@/service/team.service";
 
 export default {
     namespaced: true,
@@ -44,6 +44,26 @@ export default {
             }catch(e){
                 console.log(e, 'erreur teamStore')
             }
-        }
+        },
+        async addMemberInTeam({ commit}, body) {
+            try{
+                const result = await addHeroeInTeam(body)
+                if(result.error === 0){
+                    commit('setCurrentTeam', result.data)
+                }
+            }catch(e){
+                console.log(e, 'erreur teamStore')
+            }
+        },
+        async removeMemberInTeam({commit},body){
+            try{
+                const result = await deleteHeroesInTeam(body)
+                if(result.error === 0){
+                    commit('setCurrentTeam', result.data)
+                }
+            }catch(e){
+                console.log(e, 'erreur teamStore')
+            }
+        },
     },
 }

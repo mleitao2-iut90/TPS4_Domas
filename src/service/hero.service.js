@@ -9,11 +9,11 @@ async function createHero(body){
 }
 
 async function updateHero(body){
-    return await putRequest('/heroes/update?org_secret='+body.org_secret, body, 'UPDATEHEROS')
+    return await putRequest('/heroes/update?org-secret='+body.org_secret, body, 'UPDATEHEROS')
 }
 
 async function getHerosById(body){
-    return await getRequest('/heroes/getbyid/'+body._id+'?org_secret='+body.org_secret, 'GETHEROBYID')
+    return await getRequest('/heroes/getbyid/'+body._id+'?org-secret='+body.org_secret, 'GETHEROBYID')
 }
 
 export {
