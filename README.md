@@ -1,24 +1,3 @@
-# tptets
+# TP de S4_Domas
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Aujourd'hui nous nous retrouvons pour parler de notre Seigneur le grand monarque, le christ cosmique, l'émissaire des hommes verts, Sylvain Durif
