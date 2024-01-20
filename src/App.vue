@@ -2,9 +2,8 @@
 
 <template>
   <v-app>
-    <NavBar />
-    aaa
-    <!-- Ajoutez le reste de votre contenu ici -->
+    <NavBar :titles="titles"/>
+    <router-view/>
   </v-app>
 </template>
 
@@ -12,6 +11,15 @@
 import NavBar from "@/components/NavBar.vue";
 
 export default {
+  name: "App",
+  data: () => {
+    return {
+      titles: [
+        {text: 'Teams', route: '/teams'},
+        {text: 'Organisation', route: '/orga'}
+      ]
+    }
+  },
   components: {
     NavBar,
   },

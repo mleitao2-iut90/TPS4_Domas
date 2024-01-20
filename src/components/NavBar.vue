@@ -11,13 +11,13 @@
         </template>
 
         <v-list>
-          <v-list-item v-for="(item, index) in plusItems" :key="index" @click="handleItemClick(item)">
-            <v-list-item-title>{{ item.text }}</v-list-item-title>
+          <v-list-item v-for="title in titles" :key="title.text">
+            <v-list-item-title @click="changeRoute(title.route)">{{ title.text }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
 
-      <v-btn text @click="handleLoginClick">
+      <v-btn text @click="changeRoute('/authentification')">
         Login
       </v-btn>
     </v-container>
@@ -26,25 +26,13 @@
 
 <script>
 export default {
-  data() {
-    return {
-      plusItems: [
-        { text: 'Option 1' },
-        { text: 'Option 2' },
-        // Ajoutez d'autres options au besoin
-      ],
-    };
+  props: {
+    titles: Array,
   },
   methods: {
-    handleItemClick(item) {
-      // Gérez le clic sur un élément de la liste déroulante "Plus"
-      console.log(`Option selected: ${item.text}`);
-      // Ajoutez le code de gestion approprié ici
-    },
-    handleLoginClick() {
-      // Gérez le clic sur le bouton "Login"
-      console.log('Login clicked');
-      // Ajoutez le code de gestion approprié ici
+    changeRoute(route){
+      if(this.$route.path === route) return
+      this.$router.push(route)
     },
   },
 };
