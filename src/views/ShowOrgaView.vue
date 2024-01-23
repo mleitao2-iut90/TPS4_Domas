@@ -43,7 +43,7 @@
         <v-card-subtitle>{{ orga.subtitle }}</v-card-subtitle>
         <v-card-text>{{ orga.content }}</v-card-text>
         <v-card-actions>
-          <v-btn @click="closeDialog">Fermer</v-btn>
+          <v-btn @click="closeDialog" @closeDialog="this.closeDialog">Fermer</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -69,9 +69,9 @@ export default {
       orga: {
         title: 'Organisation ',
         subtitle: '',
-        content: '',
+        content:[]
       },
-    };
+    }
   },
   computed: {
     ...mapState('orgaStore', ['listOrganisations', 'mdpOrganisation']),
@@ -95,12 +95,11 @@ export default {
         alert('Aucun code secret est donnée, connecter vous')
         await this.$router.push('/authentification')
       }
-      //console.log(this.selected[0]._id)
       const result = await this.getOrgaByIdApi(this.selected[0]._id)
-      console.log(result, 'resultGetById')
       this.orga.title+= result.name
       this.orga.subtitle = result._id
-      this.orga.content = {teams: result.teams}
+      this.orga.content = {text: result.teams}
+      console.log(this.orga)
       this.dialog = true;
     },
     closeDialog() {
