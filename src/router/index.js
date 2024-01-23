@@ -16,6 +16,11 @@ const routes = [
     component: () => import('../views/AuthenticationView.vue')
   },
   {
+    path: '/orga/add',
+    name: 'AddOrga',
+    component: () => import('../views/AddOrgaView.vue'),
+  },
+  {
     path: '/orga',
     name: 'orga',
     component: () => import('../views/ShowOrgaView.vue'),

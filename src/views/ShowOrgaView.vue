@@ -32,6 +32,7 @@
             single-select
         >
         </v-data-table>
+        <v-btn @click="CreateOrgaBtn" color="primary">Create Organization</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -62,6 +63,9 @@ export default {
       await this.getListOrgaFromApi()
       console.log(this.listOrganisations, 'listOrga')
       this.organizations = this.listOrganisations
+    },
+    CreateOrgaBtn(){
+      this.$router.push('/orga/add')
     }
   },
   async mounted() {

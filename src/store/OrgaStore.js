@@ -1,4 +1,5 @@
-import {getAllOrgs} from "@/service/org.service";
+import {getAllOrgs} from "@/service/org.service"
+import {addOrg} from "@/service/org.service";
 
 export default {
     namespaced: true,
@@ -48,6 +49,17 @@ export default {
             }catch (e) {
                 console.log(e, 'erreur')
             }
+        },
+        async addOrgaFromApi({commit}, body) {
+            try{
+                const orga = await addOrg(body)
+                if (orga.error === 0) {
+                    commit('setCurrentOrganisation', orga.data)
+                }
+            }
+            catch (err){
+                console.log(err, 'erreur')
+            }
         }
-    },
+    }
 }
