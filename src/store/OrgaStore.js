@@ -3,7 +3,7 @@ import {getAllOrgs} from "@/service/org.service";
 export default {
     namespaced: true,
     state: () => ({
-        mdpOrganisation: null,
+        mdpOrganisation: '',
         listOrganisations: [],
         currentOrganisation: null,    }),
     getters: {
@@ -18,13 +18,13 @@ export default {
         },
     },
     mutations: {
-        setMdpOrganisation(state, mdp) {
+        setMdpOrganisationState(state, mdp) {
             state.mdpOrganisation = mdp
         },
-        setListOrganisations(state, list) {
+        setListOrganisationsState(state, list) {
             state.listOrganisations = list
         },
-        setCurrentOrganisation(state, organisation) {
+        setCurrentOrganisationState(state, organisation) {
             state.currentOrganisation = organisation
         },
     },
@@ -32,10 +32,10 @@ export default {
         async setMdpOrganisation({ commit }, mdp) {
             try{
                 //todo: appel API pour verif si bon mdp
-                commit('setMdpOrganisation', mdp)
+                commit('setMdpOrganisationState', mdp)
                 return true;
             }catch (e) {
-                console.log(e, 'erreur')
+                console.error(e, 'erreur')
                 return false;
             }
         },
@@ -43,7 +43,7 @@ export default {
             try{
                 const orga = await getAllOrgs()
                 if (orga.error === 0) {
-                    commit('setListOrganisations', orga.data)
+                    commit('setListOrganisationsState', orga.data)
                 }
             }catch (e) {
                 console.log(e, 'erreur')

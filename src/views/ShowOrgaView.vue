@@ -67,11 +67,11 @@ export default {
   async mounted() {
     await this.loadData()
   },
-  watch: {
+  /*watch: {
     selected: function (val) {
       console.log(val)
     }
-  }
+  }*/
 };
 </script>
 
