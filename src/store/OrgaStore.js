@@ -1,12 +1,12 @@
-import {getAllOrgs} from "@/service/org.service"
-import {addOrg} from "@/service/org.service";
+import {getAllOrgs, addOrg, getOrgById} from "@/service/org.service"
 
 export default {
     namespaced: true,
     state: () => ({
         mdpOrganisation: '',
         listOrganisations: [],
-        currentOrganisation: null,    }),
+        currentOrganisation: null,
+    }),
     getters: {
         getmdpOrganisation(state) {
             return state.mdpOrganisation
@@ -32,12 +32,9 @@ export default {
     actions: {
         async setMdpOrganisation({ commit }, mdp) {
             try{
-                //todo: appel API pour verif si bon mdp
                 commit('setMdpOrganisationState', mdp)
-                return true;
             }catch (e) {
                 console.error(e, 'erreur')
-                return false;
             }
         },
         async getListOrgaFromApi({ commit }) {
@@ -59,6 +56,20 @@ export default {
             }
             catch (err){
                 console.log(err, 'erreur')
+            }
+        },
+        async getOrgaByIdApi({commit, state}, id) {
+            let orga;
+            try{
+                const body = {org_secret: state.mdpOrganisation, body: {_id: id}}
+                orga = await getOrgById(body)
+                if( orga.error === 0){
+                    commit('setCurrentOrganisationState', orga.data)
+                }
+                return orga.data[0]
+            }catch (e) {
+                console.log(e, 'erreur')
+                return orga.data
             }
         }
     }

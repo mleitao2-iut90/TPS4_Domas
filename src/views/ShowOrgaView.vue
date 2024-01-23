@@ -33,8 +33,20 @@
         >
         </v-data-table>
         <v-btn @click="CreateOrgaBtn" color="primary">Create Organization</v-btn>
+        <v-btn @click="getInfo" color="primary">Info</v-btn>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="dialog" max-width="600">
+      <v-card>
+        <v-card-title>{{ orga.title }}</v-card-title>
+        <v-card-subtitle>{{ orga.subtitle }}</v-card-subtitle>
+        <v-card-text>{{ orga.content }}</v-card-text>
+        <v-card-actions>
+          <v-btn @click="closeDialog">Fermer</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -45,20 +57,27 @@ export default {
   data() {
     return {
       search: '',
-      selected: null,
+      selected: [],
       headers: [
         { text: 'Id', value: '_id' },
         { text: 'Name', value: 'name' },
       ],
       organizations: [
       ],
+
+      dialog: false,
+      orga: {
+        title: 'Organisation ',
+        subtitle: '',
+        content: '',
+      },
     };
   },
   computed: {
-    ...mapState('orgaStore', ['listOrganisations']),
+    ...mapState('orgaStore', ['listOrganisations', 'mdpOrganisation']),
   },
   methods: {
-    ...mapActions('orgaStore', ['getListOrgaFromApi']),
+    ...mapActions('orgaStore', ['getListOrgaFromApi', 'getOrgaByIdApi']),
     async loadData(){
       await this.getListOrgaFromApi()
       console.log(this.listOrganisations, 'listOrga')
@@ -66,7 +85,27 @@ export default {
     },
     CreateOrgaBtn(){
       this.$router.push('/orga/add')
-    }
+    },
+    async getInfo(){
+      if(this.selected.length === 0){
+        alert('Aucune organisation est selectionner')
+        return;
+      }
+      if(this.mdpOrganisation === ''){
+        alert('Aucun code secret est donnée, connecter vous')
+        await this.$router.push('/authentification')
+      }
+      //console.log(this.selected[0]._id)
+      const result = await this.getOrgaByIdApi(this.selected[0]._id)
+      console.log(result, 'resultGetById')
+      this.orga.title+= result.name
+      this.orga.subtitle = result._id
+      this.orga.content = {teams: result.teams}
+      this.dialog = true;
+    },
+    closeDialog() {
+      this.dialog = false;
+    },
   },
   async mounted() {
     await this.loadData()

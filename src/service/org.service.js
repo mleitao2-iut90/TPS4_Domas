@@ -9,15 +9,15 @@ async function addOrg(body) {
 }
 
 async function addTeamsInOrg(body){
-    return await patchRequest('/orgs/addteam?org_secret='+body.org_secret, body.body, 'ADDTEAMINORG')
+    return await patchRequest('/orgs/addteam?org-secret='+body.org_secret, body.body, 'ADDTEAMINORG')
 }
 
 async function deleteTeamInOrg(body){
-    return await patchRequest('/orgs/removeteam?org_secret='+body.org_secret, body.body, 'DELETETEAMINORG')
+    return await patchRequest('/orgs/removeteam?org-secret='+body.org_secret, body.body, 'DELETETEAMINORG')
 }
 
 async function getOrgById(body){
-    return await getRequest('/orgs/getbyid?org_secret='+body.org_secret, 'GETORGBYID')
+    return await getRequest('/orgs/getbyid/'+body.body._id+'?org-secret='+body.org_secret, 'GETORGBYID')
 }
 
 export {
