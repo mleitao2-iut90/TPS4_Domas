@@ -6,6 +6,7 @@
       <v-btn @click="validateInput">Validate</v-btn>
     </v-container>
   </v-app>
+
 </template>
 
 <script>
@@ -15,7 +16,7 @@ export default {
   data() {
     return {
       name: '',
-      secret: ''
+      secret: '',
     };
   },
   methods: {
@@ -28,7 +29,7 @@ export default {
       await this.addOrgaFromApi(body);
       await this.$router.push('/orga')
     }
-  }
+  },
 };
 </script>
 

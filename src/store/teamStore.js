@@ -1,3 +1,5 @@
+import {getAllTeam} from "@/service/team.service";
+
 export default {
     namespaced: true,
     state: () => ({
@@ -21,6 +23,15 @@ export default {
         },
     },
     actions: {
-
+        async getListTeamsFromAPi({commit}){
+            try{
+                const result = await getAllTeam()
+                if(result.error === 0){
+                    commit('setListTeams', result.data)
+                }
+            }catch (e) {
+                console.log(e,'erreur')
+            }
+        }
     },
 }

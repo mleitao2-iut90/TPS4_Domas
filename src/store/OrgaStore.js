@@ -6,6 +6,7 @@ export default {
         mdpOrganisation: '',
         listOrganisations: [],
         currentOrganisation: null,
+        showDialogAdd: false,
     }),
     getters: {
         getmdpOrganisation(state) {
@@ -27,6 +28,9 @@ export default {
         },
         setCurrentOrganisationState(state, organisation) {
             state.currentOrganisation = organisation
+        },
+        setShowDialogAddState(state, organisation) {
+            state.showDialogAdd = organisation
         },
     },
     actions: {
@@ -51,7 +55,8 @@ export default {
             try{
                 const orga = await addOrg(body)
                 if (orga.error === 0) {
-                    commit('setCurrentOrganisation', orga.data)
+                    commit('setCurrentOrganisationState', orga.data)
+                    await this.getListOrgaFromApi()
                 }
             }
             catch (err){

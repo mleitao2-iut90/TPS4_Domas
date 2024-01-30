@@ -23,7 +23,7 @@
         <v-data-table
             v-model="selected"
             :headers="headers"
-            :items="organizations"
+            :items="listOrganisations"
             :items-per-page="10"
             class="elevation-1"
             :search="search"
@@ -36,6 +36,17 @@
         <v-btn @click="getInfo" color="primary">Info</v-btn>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="showDialogAdd" max-width="600">
+      <v-card>
+        <v-card-title>{{ content.title }}</v-card-title>
+        <v-card-text v-for="content in content.contents" :key="content.text">
+          <input :type="content.type" :placeholder="content.text" v-model="content.value">
+        </v-card-text>
+        <v-btn @click="validate">Validate</v-btn>
+        <v-btn @click="closeDialog">Retour</v-btn>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="dialog" max-width="600">
       <v-card>
@@ -51,7 +62,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
   data() {
@@ -62,8 +73,6 @@ export default {
         { text: 'Id', value: '_id' },
         { text: 'Name', value: 'name' },
       ],
-      organizations: [
-      ],
 
       dialog: false,
       orga: {
@@ -71,21 +80,31 @@ export default {
         subtitle: '',
         content:[]
       },
+
+      content: {
+        title: 'salut',
+        contents: [
+          {text: 'nomOrganisation', type: 'String', value: ''},
+          {text: 'codeSecret', type: 'password', value: ''},
+        ],
+      }
     }
   },
   computed: {
-    ...mapState('orgaStore', ['listOrganisations', 'mdpOrganisation']),
+    ...mapState('orgaStore', ['listOrganisations', 'mdpOrganisation', "showDialogAdd"]),
   },
   methods: {
-    ...mapActions('orgaStore', ['getListOrgaFromApi', 'getOrgaByIdApi']),
+    ...mapActions('orgaStore', ['getListOrgaFromApi', 'getOrgaByIdApi', 'addOrgaFromApi']),
+    ...mapMutations('orgaStore', ['setShowDialogAddState']),
+
     async loadData(){
       await this.getListOrgaFromApi()
-      console.log(this.listOrganisations, 'listOrga')
-      this.organizations = this.listOrganisations
     },
+
     CreateOrgaBtn(){
-      this.$router.push('/orga/add')
+      this.setShowDialogAddState(true)
     },
+
     async getInfo(){
       if(this.selected.length === 0){
         alert('Aucune organisation est selectionner')
@@ -102,8 +121,23 @@ export default {
       console.log(this.orga)
       this.dialog = true;
     },
+
     closeDialog() {
       this.dialog = false;
+      this.setShowDialogAddState(false)
+    },
+
+    async validate() {
+      if(this.content.contents[0].value === '' || this.content.contents[1].value === ''){
+        alert('remplir tout les fields (a modifier avec le truc du prof)')
+        return
+      }
+      const body = {
+        name: this.content.contents[0].value,
+        secret: this.content.contents[1].value,
+      };
+      await this.addOrgaFromApi(body);
+      this.setShowDialogAddState(false)
     },
   },
   async mounted() {
