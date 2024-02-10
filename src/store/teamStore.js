@@ -1,4 +1,4 @@
-import {getAllTeam} from "@/service/team.service";
+import {createTeam, getAllTeam} from "@/service/team.service";
 
 export default {
     namespaced: true,
@@ -31,6 +31,18 @@ export default {
                 }
             }catch (e) {
                 console.log(e,'erreur')
+            }
+        },
+        async addTeamsFromApi({commit}, body) {
+            try{
+                const result = await createTeam(body)
+                const list = await getAllTeam()
+                if(result.error === 0){
+                    commit('setCurrentTeam', result.data)
+                    commit('setListTeams', list.data)
+                }
+            }catch(e){
+                console.log(e, 'erreur teamStore')
             }
         }
     },

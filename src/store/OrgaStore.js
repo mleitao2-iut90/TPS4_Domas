@@ -1,4 +1,4 @@
-import {getAllOrgs, addOrg, getOrgById} from "@/service/org.service"
+import {getAllOrgs, addOrg, getOrgById, addTeamsInOrg, deleteTeamInOrg} from "@/service/org.service"
 
 export default {
     namespaced: true,
@@ -7,6 +7,8 @@ export default {
         listOrganisations: [],
         currentOrganisation: null,
         showDialogAdd: false,
+
+        testAddDialod: false,
     }),
     getters: {
         getmdpOrganisation(state) {
@@ -32,6 +34,9 @@ export default {
         setShowDialogAddState(state, organisation) {
             state.showDialogAdd = organisation
         },
+        setTestAddDialodState(state) {
+            state.testAddDialod = !state.testAddDialod
+        }
     },
     actions: {
         async setMdpOrganisation({ commit }, mdp) {
@@ -57,10 +62,12 @@ export default {
                 if (orga.error === 0) {
                     commit('setCurrentOrganisationState', orga.data)
                     await this.getListOrgaFromApi()
+                    return orga;
                 }
             }
             catch (err){
                 console.log(err, 'erreur')
+
             }
         },
         async getOrgaByIdApi({commit, state}, id) {
@@ -69,13 +76,33 @@ export default {
                 const body = {org_secret: state.mdpOrganisation, body: {_id: id}}
                 orga = await getOrgById(body)
                 if( orga.error === 0){
-                    commit('setCurrentOrganisationState', orga.data)
+                    commit('setCurrentOrganisationState', orga.data[0])
                 }
-                return orga.data[0]
             }catch (e) {
                 console.log(e, 'erreur')
-                return orga.data
             }
-        }
+        },
+        async addTeamsInOrga({ commit, state}, body) {
+            try{
+                body = {org_secret: state.mdpOrganisation, body: body}
+                const result = await addTeamsInOrg(body)
+                if(result.error === 0){
+                    commit('setCurrentOrganisationState', result.data)
+                }
+            }catch(e){
+                console.log(e, 'erreur teamStore')
+            }
+        },
+        async removeTeamInOrga({commit,state},body){
+            try{
+                body = {org_secret: state.mdpOrganisation, body: body}
+                const result = await deleteTeamInOrg(body)
+                if(result.error === 0){
+                    commit('setCurrentOrganisationState', result.data)
+                }
+            }catch(e){
+                console.log(e, 'erreur teamStore')
+            }
+        },
     }
 }

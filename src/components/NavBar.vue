@@ -1,43 +1,55 @@
-<!-- NavBar.vue -->
 <template>
-  <v-app-bar app>
-    <v-container>
-      <!-- Composant "Plus" avec liste déroulante -->
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn text v-on="on">
-            Plus
-          </v-btn>
-        </template>
+  <v-container class="navBarRoot">
+    <v-navigation-drawer v-model="drawer" app>
+      <v-list>
+        <v-list-item v-for="(item, index) in items" :key="index" @click="navigateTo(item.route)">
+          <v-list-item-title>{{ item.text }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-        <v-list>
-          <v-list-item v-for="title in titles" :key="title.text">
-            <v-list-item-title @click="changeRoute(title.route)">{{ title.text }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-
-      <v-btn text @click="changeRoute('/authentification')">
-        Login
-      </v-btn>
-    </v-container>
-  </v-app-bar>
+    <v-app-bar app>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>Mon Application</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-if="!loggedIn" color="primary" @click="login">Login</v-btn>
+      <v-btn v-else color="error" @click="logout">Logout</v-btn>
+    </v-app-bar>
+  </v-container>
 </template>
 
 <script>
+import {mapActions, mapState} from "vuex";
+
 export default {
   props: {
-    titles: Array,
+    items: Array,
+  },
+  data() {
+    return {
+      drawer: false,
+    };
+  },
+  computed: {
+    ...mapState('authStore', ['loggedIn'])
   },
   methods: {
-    changeRoute(route){
-      if(this.$route.path === route) return
-      this.$router.push(route)
+    ...mapActions('authStore', ['setLoggedIn']),
+    login() {
+      this.setLoggedIn(true);
     },
-  },
+    logout() {
+      this.setLoggedIn(false);
+    },
+    navigateTo(route) {
+      this.$router.push(route);
+    }
+  }
 };
 </script>
 
-<style scoped>
-/* Ajoutez vos styles CSS ici */
+<style>
+.navBarRoot {
+  margin-bottom: 2%;
+}
 </style>
