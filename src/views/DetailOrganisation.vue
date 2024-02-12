@@ -37,7 +37,7 @@
             <td>{{ item.name }}</td>
             <td>
               <v-btn color="primary">Modifier</v-btn>
-              <v-btn @click="rmTeam(item._id)" color="red">Supprimer</v-btn>
+              <v-btn @click="deleteTeamMaybe(item._id)" color="red">Supprimer</v-btn>
             </td>
           </tr>
         </template>
@@ -66,12 +66,20 @@
       </v-card>
     </v-dialog>
 
+    <EventDialog
+        title="Supprimé"
+        text="Voulez vous supprimé cet teams de l'organisation ?"
+        width="500"
+        :show="showDialogDelTeam"
+        @closeDialog="rmTeam"
+    />
+
   </v-container>
 </template>
 
 <script>
 import {mapActions, mapState} from "vuex";
-
+import EventDialog from "@/components/EventDialog.vue";
 export default {
   data() {
     return {
@@ -83,8 +91,14 @@ export default {
         { text: 'ID', value: '_id' },
         { text: 'Nom', value: 'name' },
         { text: 'Actions', value: '' },
-      ]
+      ],
+
+      showDialogDelTeam: false,
+      idTeamDelTmp: null,
     };
+  },
+  components: {
+    EventDialog
   },
   computed: {
     ...mapState('orgaStore', ['currentOrganisation']),
@@ -102,17 +116,26 @@ export default {
       this.selectedTeam = null;
     },
     async addTeam() {
-      console.log('Équipe sélectionnée:', this.selectedTeam);
       await this.addTeamsInOrga({idTeam: this.selectedTeam})
       this.dialog = false;
       this.selectedTeam = null;
       this.getOrgaByIdApi(this.currentOrganisation._id)
+      this.getListTeamsFromAPi();
     },
-    async rmTeam(idTeam){
-      const body = {idTeam: idTeam}
-      console.log(body)
-      await this.removeTeamInOrga(body)
-      this.getOrgaByIdApi(this.currentOrganisation._id)
+    async deleteTeamMaybe(idTeam) {
+      this.idTeamDelTmp = idTeam;
+      this.showDialogDelTeam = true;
+    },
+    async rmTeam(event){
+      if(event){
+        const body = {idTeam: this.idTeamDelTmp}
+        console.log(body)
+        await this.removeTeamInOrga(body)
+        this.getOrgaByIdApi(this.currentOrganisation._id)
+        this.getListTeamsFromAPi();
+      }
+      this.showDialogDelTeam = false;
+      this.idTeamDelTmp = null;
     },
   },
   mounted() {
