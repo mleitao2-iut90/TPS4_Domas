@@ -36,7 +36,7 @@
             <td>{{ item._id }}</td>
             <td>{{ item.name }}</td>
             <td>
-              <v-btn color="primary">Modifier</v-btn>
+              <v-btn @click="showTeamDetail(item)" color="primary">Modifier</v-btn>
               <v-btn @click="deleteTeamMaybe(item._id)" color="red">Supprimer</v-btn>
             </td>
           </tr>
@@ -74,12 +74,15 @@
         @closeDialog="rmTeam"
     />
 
+    <DetailTeam :team="selectedTeam" :show="showDetailTeam" @closeDetailTeam="closeDetailTeam"/>
+
   </v-container>
 </template>
 
 <script>
 import {mapActions, mapState} from "vuex";
 import EventDialog from "@/components/EventDialog.vue";
+import DetailTeam from "@/components/DetailTeam.vue";
 export default {
   data() {
     return {
@@ -95,10 +98,13 @@ export default {
 
       showDialogDelTeam: false,
       idTeamDelTmp: null,
+
+      showDetailTeam: false,
     };
   },
   components: {
-    EventDialog
+    EventDialog,
+    DetailTeam,
   },
   computed: {
     ...mapState('orgaStore', ['currentOrganisation']),
@@ -137,9 +143,17 @@ export default {
       this.showDialogDelTeam = false;
       this.idTeamDelTmp = null;
     },
+    async showTeamDetail(team) {
+      this.selectedTeam = team;
+      this.showDetailTeam = true;
+    },
+    async closeDetailTeam() {
+      this.showDetailTeam = false;
+    }
   },
   mounted() {
     this.getListTeamsFromAPi();
+    console.log(this.currentOrganisation, 'orga')
   }
 };
 </script>

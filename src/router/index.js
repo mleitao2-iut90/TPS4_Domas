@@ -13,7 +13,17 @@ const routes = [
     path: '/orga/detail',
     name: 'orgaDetail',
     component: () => import('../views/DetailOrganisation.vue')
-  }
+  },
+  {
+    path: '/teams',
+    name: 'teams',
+    component: () => import('../views/ShowTeamsView.vue')
+  },
+  {
+    path: '/teams/add',
+    name: 'teamsAdd',
+    component: () => import('../views/AddTeamsView.vue')
+  },
 ]
 
 const router = new VueRouter({
