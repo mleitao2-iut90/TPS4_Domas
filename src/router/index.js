@@ -24,6 +24,11 @@ const routes = [
     name: 'teamsAdd',
     component: () => import('../views/AddTeamsView.vue')
   },
+  {
+    path: '*',
+    name: 'error404',
+    component: () => import('../App.vue')
+  }
 ]
 
 const router = new VueRouter({

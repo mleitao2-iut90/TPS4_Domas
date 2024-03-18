@@ -1,26 +1,24 @@
 import axios from 'axios'
-import './axios-interceptors'
 import store from "@/store";
 
 // creation d'un agent axios, avec une config. pour atteindre l'API
 const axiosAgent = axios.create({
-    baseURL: "https://apidemo.iut-bm.univ-fcomte.fr/herocorp"
+    baseURL: "https://apidemo.iut-bm.univ-fcomte.fr"
 });
 
-axios.interceptors.request.use(function (config) {
-    const secretPhrase = store.state["orgaStore/mdpOrganisation"]; // Obtenez la phrase secrète du store Vuex
-    console.log(secretPhrase)
-    // Vérifiez si la phrase secrète existe dans le store
-    if (secretPhrase) {
-        // Ajoutez l'en-tête org-secret à la requête
-        config.headers['org-secret'] = secretPhrase;
+axiosAgent.interceptors.request.use(
+    config => {
+        const codeSecret = store.state.orgaStore.mdpOrganisation;
+        if(codeSecret){
+            config.headers['org-secret'] = codeSecret; // Ajoutez l'en-tête org-secret à la requête
+        }
+        return config;
+    },
+    error => {
+        // Faites quelque chose avec une erreur de requête
+        return Promise.reject(error);
     }
-
-    return config;
-}, function (error) {
-    // Faites quelque chose avec une erreur de requête
-    return Promise.reject(error);
-});
+);
 
 function handleError(serviceName, err) {
     if (err.response) {

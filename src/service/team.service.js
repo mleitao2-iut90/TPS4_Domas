@@ -1,19 +1,19 @@
 import {getRequest, patchRequest, postRequest} from "@/service/axios.service";
 
 async function getAllTeam(){
-    return await getRequest('/teams/get', 'GETALLTEAM')
+    return await getRequest('/herocorp/teams/get', 'GETALLTEAM')
 }
 
 async function createTeam(body){
-    return await postRequest('/teams/create', body, 'CREATETEAM')
+    return await postRequest('/herocorp/teams/create', body, 'CREATETEAM')
 }
 
 async function addHeroeInTeam(body){
-    return await patchRequest('/teams/addheroes', body, 'ADDHEROEINTTEAMS')
+    return await patchRequest('/herocorp/teams/addheroes', body, 'ADDHEROEINTTEAMS')
 }
 
 async function deleteHeroesInTeam(body){
-    return await patchRequest('/teams/removeheroes', body, 'DELETEHEROSINTEAM')
+    return await patchRequest('/herocorp/teams/removeheroes', body, 'DELETEHEROSINTEAM')
 }
 
 export {
