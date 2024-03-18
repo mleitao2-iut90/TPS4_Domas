@@ -26,7 +26,7 @@
             :headers="headers"
             :items="this.listOrganisations"
             :items-per-page="10"
-            class="elevation-1"q
+            class="elevation-1"
             :search="search"
             show-select
             item-key="_id"
