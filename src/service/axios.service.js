@@ -3,7 +3,8 @@ import store from "@/store";
 
 // creation d'un agent axios, avec une config. pour atteindre l'API
 const axiosAgent = axios.create({
-    baseURL: "https://apidemo.iut-bm.univ-fcomte.fr"
+    baseURL: "https://apidemo.iut-bm.univ-fcomte.fr",
+    withCredentials: true,
 });
 
 axiosAgent.interceptors.request.use(
@@ -11,6 +12,12 @@ axiosAgent.interceptors.request.use(
         const codeSecret = store.state.orgaStore.mdpOrganisation;
         if(codeSecret){
             config.headers['org-secret'] = codeSecret; // Ajoutez l'en-tête org-secret à la requête
+        }
+
+        const token = store.state.authStore.xsrfToken;
+        console.log(store.state.authStore, 'token')
+        if(token) {
+            config.headers['x-xsrf-token'] = token; // Ajoutez l'en-tête x-xsrf-token à la requête
         }
         return config;
     },

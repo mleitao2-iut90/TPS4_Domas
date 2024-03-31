@@ -12,14 +12,14 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Mon Application</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="!loggedIn" color="primary" @click="login">Login</v-btn>
-      <v-btn v-else color="error" @click="logout">Logout</v-btn>
+      <v-btn v-if="!loggedIn" color="primary" @click="navigateTo('/login')">Login</v-btn>
+      <v-btn v-else color="error" @click="navigateTo('/login')">Logout</v-btn>
     </v-app-bar>
   </v-container>
 </template>
 
 <script>
-import {mapActions, mapState} from "vuex";
+import {mapState} from "vuex";
 
 export default {
   props: {
@@ -34,13 +34,6 @@ export default {
     ...mapState('authStore', ['loggedIn'])
   },
   methods: {
-    ...mapActions('authStore', ['setLoggedIn']),
-    login() {
-      this.setLoggedIn(true);
-    },
-    logout() {
-      this.setLoggedIn(false);
-    },
     navigateTo(route) {
       this.$router.push(route);
     }

@@ -51,7 +51,7 @@ export default {
     NavBar,
     ErrorDialog,
     PromiseDialog,
-    EventDialog
+    EventDialog,
   },
   methods: {
     logtest(event) {
