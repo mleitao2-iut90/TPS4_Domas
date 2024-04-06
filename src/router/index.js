@@ -9,12 +9,12 @@ const routes = [
     name: 'app',
     redirect: { name: 'home' }
   },
-    {
-        path: '/home',
-        name: 'home',
-        component: () => import('../views/HomeView.vue')
-    },
-    {
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import('../views/HomeView.vue')
+  },
+  {
     path: '/orga',
     name: 'orga',
     component: () => import('../views/ShowOrganisations.vue')
@@ -24,7 +24,7 @@ const routes = [
     name: 'orgaDetail',
     component: () => import('../views/DetailOrganisation.vue')
   },
-    {
+  {
     path: '/teams',
     name: 'teams',
     component: () => import('../views/ShowTeamsView.vue')
@@ -34,11 +34,11 @@ const routes = [
     name: 'teamsAdd',
     component: () => import('../views/AddTeamsView.vue')
   },
-    {
-        path: '/login',
-        name:'login',
-        component: () => import('../views/Login.vue')
-    },
+  {
+    path: '/login',
+    name:'login',
+    component: () => import('../views/Login.vue')
+  },
   {
     path: '*',
     name: 'error404',

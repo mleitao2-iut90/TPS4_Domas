@@ -5,6 +5,7 @@ export default {
     state: () => ({
         listAliasHeros: [],
         currentHeros: null,
+        showModifHero: false,
     }),
     getters: {
         getListAliasHeros(state) {
@@ -13,6 +14,9 @@ export default {
         getCurrentHeros(state) {
             return state.currentHeros
         },
+        getShowModifHero(state) {
+            return state.showModifHero
+        },
     },
     mutations: {
         setListAliasHeros(state, list) {
@@ -20,6 +24,9 @@ export default {
         },
         setCurrentHeros(state, heros) {
             state.currentHeros = heros
+        },
+        setShowModifHero(state, heros) {
+            state.showModifHero = heros
         },
     },
     actions: {
@@ -44,5 +51,13 @@ export default {
                 console.log(e, 'erreur')
             }
         },
+        async showModifHero({commit}, id_hero){
+            try {
+                await getHerosById({_id: id_hero})
+                commit('setShowModifHero', true)
+            }catch (e) {
+                console.error(e, 'erreur')
+            }
+        }
     },
 }

@@ -7,11 +7,6 @@
     <p v-else>
       You are logged. You can list users by opening left drawer
       <UserEdit/>
-      <v-btn
-          color="success"
-          class="mr-4"
-          @click="this.getUser">
-      </v-btn>
     </p>
 
   </v-container>

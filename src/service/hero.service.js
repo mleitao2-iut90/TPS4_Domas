@@ -13,6 +13,11 @@ async function updateHero(body){
     return await putRequest('/herocorp/heroes/update', body, 'UPDATEHEROS')
 }
 
+async function authUpdateHero(body){
+    //return await putRequest('/herocorp/heroes/update?org-secret='+body.org_secret, body, 'UPDATEHEROS')
+    return await putRequest('/herocorp/heroes/authupdate', body, 'AUTHUPDATEHEROS')
+}
+
 async function getHerosById(body){
     //return await getRequest('/herocorp/heroes/getbyid/'+body._id+'?org-secret='+body.org_secret, 'GETHEROBYID')
     return await getRequest('/herocorp/heroes/getbyid/'+body._id, 'GETHEROBYID')
@@ -23,4 +28,5 @@ export {
     createHero,
     updateHero,
     getHerosById,
+    authUpdateHero,
 }

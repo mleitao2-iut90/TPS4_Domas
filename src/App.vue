@@ -24,6 +24,8 @@
     >
     </EventDialog>
 
+    <EditHero :show="showModifHero"/>
+
     <NavBar :items="titles"/>
     <router-view/>
   </v-app>
@@ -34,6 +36,8 @@ import NavBar from './components/NavBar.vue';
 import ErrorDialog from './components/ErrorDialog.vue';
 import PromiseDialog from './components/PromiseDialog.vue';
 import EventDialog from './components/EventDialog.vue';
+import EditHero from "@/components/EditHero.vue";
+import {mapState} from "vuex";
 export default {
   name: "App",
   data: () => {
@@ -47,11 +51,15 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapState('herosStore', ['showModifHero'])
+  },
   components: {
     NavBar,
     ErrorDialog,
     PromiseDialog,
     EventDialog,
+    EditHero,
   },
   methods: {
     logtest(event) {
